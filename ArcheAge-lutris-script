@@ -1,0 +1,77 @@
+files:
+- d3d11: https://haagch.frickel.club/files/dxvk/latest/32/bin/d3d11.dll
+- dxgi: https://haagch.frickel.club/files/dxvk/latest/32/bin/dxgi.dll
+- d3dcompiler_42: http://alt.magzu.net/wine/d3dcompiler_42.dll
+game:
+  appid: 304030
+  arch: win32
+  prefix: $GAMEDIR/prefix
+installer:
+- task:
+    app: vcrun2010
+    arch: win32
+    description: Installing vcrun2010
+    name: winetricks
+    prefix: $GAMEDIR/prefix
+- task:
+    app: d3dcompiler_43
+    arch: win32
+    description: Installing d3dcompiler_43
+    name: winetricks
+    prefix: $GAMEDIR/prefix
+- task:
+    arch: win32
+    description: Adding DLL Overrides
+    key: d3d11
+    name: set_regedit
+    path: HKEY_CURRENT_USER\Software\Wine\DllOverrides
+    value: native
+- task:
+    arch: win32
+    description: Adding DLL Overrides
+    key: dxgi
+    name: set_regedit
+    path: HKEY_CURRENT_USER\Software\Wine\DllOverrides
+    value: native
+- task:
+    arch: win32
+    description: Adding DLL Overrides
+    key: d3dcompiler_42
+    name: set_regedit
+    path: HKEY_CURRENT_USER\Software\Wine\DllOverrides
+    value: native,builtin
+- task:
+    arch: win32
+    description: Adding DLL Overrides
+    key: d3dcompiler_43
+    name: set_regedit
+    path: HKEY_CURRENT_USER\Software\Wine\DllOverrides
+    value: native,builtin
+- merge:
+    dst: $GAMEDIR/prefix/drive_c/windows/system32
+    src: $d3d11
+- merge:
+    dst: $GAMEDIR/prefix/drive_c/windows/system32
+    src: $dxgi
+- merge:
+    dst: $GAMEDIR/prefix/drive_c/windows/system32
+    src: $d3dcompiler_42
+- merge:
+    dst: $GAMEDIR/Games/ArcheAge/Live/bin32
+    src: $d3d11
+- merge:
+    dst: $GAMEDIR/Games/ArcheAge/Live/bin32
+    src: $dxgi
+- merge:
+    dst: $GAMEDIR/Games/ArcheAge/Live/bin32
+    src: $d3dcompiler_42
+system:
+  disable_monitoring: true
+  disable_runtime: true
+  pulse_latency: true
+winesteam:
+  overrides:
+    d3d11,dxgi: native
+    d3dcompiler_42: native,builtin
+    d3dcompiler_43: native,builtin
+  version: staging-3.8-x86_64
